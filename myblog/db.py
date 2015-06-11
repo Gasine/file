@@ -18,6 +18,7 @@ class blog(Base):
     id = Column(Integer,primary_key=True)
     auth = Column(String(20))
     time = Column(String(20))
+    title = Column(String(20))
     content = Column(Text)
     sorted = Column(Integer)
 
@@ -33,6 +34,8 @@ class blog(Base):
             return False
     def getallArticle(self):
         return session.query(blog)
+    def getArticlebyid(self,id):
+        return session.query(blog).filter(blog.id==id)
     def getCount(self,sortedValue = ''):
         if (sorted !=''):
             return session.query(blog).count()
@@ -50,6 +53,19 @@ class sorted(Base):
 
     def addSort(self,name):
         sort = sorted(name = name)
-        session.add()
-    def getSortid(self):
-        pass
+        if (sort):
+            session.add(sort)
+            session.commit()
+            session.close()
+            return True
+        else:
+            return False
+
+    def getSortid(self,name):
+        sortedValue = session.query(sorted.id).filter(sorted.name==name).first()
+        if (sortedValue):
+            return sortedValue
+        else:
+            return False
+    def getSort(self):
+        return session.query(sorted.name)

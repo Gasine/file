@@ -176,13 +176,13 @@
         <fieldset>
             <div class="spa"><label>标题</label></div>
             <div class="spa">
-            <input type="text" placeholder="title">
+            <input type="text" placeholder="title" id="title">
                 </div>
             <div class="spa">
-                <label>分类</label>
+                <label id="sorted">分类</label>
             </div>
                 <div class="spa">
-            <select>
+            <select id="sorted">
                     <option>c++</option>
                     <option>c</option>
                     <option>javascript</option>
@@ -190,8 +190,8 @@
                 </select></div>
             <div class="spa"><label>内容</label></div>
                     <div class="spa">
-            <textarea cols="100" rows="30" placeholder="content"></textarea></div>
-            <button class="button">提交</button>
+            <textarea cols="100" rows="30" placeholder="content" id="content"></textarea></div>
+            <button class="button" onclick="">提交</button>
         </fieldset>
 
     </form>
@@ -202,20 +202,33 @@
 <div class="bottom"></div>
 </body>
 <script type="text/javascript">
-    //var url=location.href;
-    //var sort=document.getElementsByClassName('sort_url');
-    //for (var i=0;i<sort.length;++i){
-      //  if(url.indexOf(sort[i].id)!=-1){
-      //      sort[i].setAttribute('style','background-color:#000');
-    // }
-    //}
-    //function test() {
-     //   alert(document.body.clientWidth)
-      //  if (document.body.clientWidth<1306) {
-     //       var div = document.getElementById('left');
-     //       div.setAttribute('style', 'display:none');
-     //   }
-    //}
-    //window.onresize=test();
+    function postarticle(){
+        if (window.XMLHttpRequest)
+         {// code for IE7+, Firefox, Chrome, Opera, Safari
+         xmlhttp=new XMLHttpRequest();
+         }
+        else
+         {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var title = document.getElementById('title').value;
+        var sorted = document.getElementById('sorted');
+        var index = sorted.selectedIndex;
+        sorted = sorted.options[index].text();
+        var content = document.getElementById('content').value;
+        var date = new Date().toLocaleString();
+        xmlhttp.open("POST","/addarticle",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        data = 'title='+title+'&sorted='+sorted+'&content='+content+'&date='+date;
+        xmlhttp.onreadystatechange = response;
+        xmlhttp.send(data);
+    }
+    function response(){
+        if (xmlhttp.status ==200){
+            if(xmlhttp.readyState==4){
+
+            }
+        }
+    }
 </script>
 </html>
