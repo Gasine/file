@@ -12,14 +12,13 @@
 
     }
     .top{
-        margin-left:23%;
+        margin:0px auto;
         background-color: aquamarine;
         width: 1000px;
         height: 200px;
     }
     .index{
-        margin-left:23%;
-        margin-top: 0px;
+        margin:0px auto;
         width:1000px;
         height: 40px;
         background-color: #eee;
@@ -42,29 +41,30 @@
         width: 120px;
         border-left: 1px solid white;
         border-right: 1px solid white ;
-        padding-top: 5px;
+        line-height: 28px;
         text-decoration: none;
         color: #444;
         font-size: 20px;
     }
     a:hover,a:visited,.visited{
-        border: 2px solid #f7f7f7;
+        border: 1px solid #f7f7f7;
         background-color: #f7f7f7;
     }
     .login{
         float:right;
-        margin:5px 40px 0px 0px;
+        height:28px;
+        line-height: 28px;
+        margin-right: 5px;
         font-size: 14px;
         color:#444;
+        border:1px solid white;
     }
     .content_left{
         clear: both;
         background-color: white;
         width: 240px;
         height: 600px;
-        margin-left:23%;
         float: left;
-        position: relative;
     }
     .content_left ul li{
         list-style: none;
@@ -91,22 +91,59 @@
     }
     .page{
         clear:both;
-        margin-left:60%;
+        width: 100%;
     }
+    .pagecenter{
+        width: 200px;
+        margin: 0px auto;
+    }
+    .pagecenter a{
+        -webkit-appearance: none;
+          margin: 0;
+          border: none;
+          overflow: visible;
+          font: inherit;
+          color: #666;
+          text-transform: none;
+          display: inline-block;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+          padding: 0 12px;
+          background: #f7f7f7;
+          vertical-align: middle;
+          line-height: 28px;
+          min-height: 30px;
+          font-size: 1rem;
+          text-decoration: none;
+          text-align: center;
+          border: 1px solid rgba(0,0,0,.2);
+          border-bottom-color: rgba(0,0,0,.3);
+          background-origin: border-box;
+          background-image: -webkit-linear-gradient(top,#fff,#eee);
+          background-image: linear-gradient(to bottom,#fff,#eee);
+          border-radius: 4px;
+          text-shadow: 0 1px 0 #fff;
+        margin-left: 5px;
+    }
+
     .bottom{
         width: 100%;
         height:100px;
     }
     .text{
+        border-top: 1px solid rgba(0,0,0,.2);
+        margin-top: 10px;
         margin-left: 20px;
+        height: 200px;
 
     }
     .main{
         font: 400 14px / 20px "Helvetica Neue",Helvetica,Arial,sans-serif;
         width:700px;
+        height:80px;
     }
     .writer{
-        font-size: 12px;
+        font-size: 14px;
         line-height: 18px;
         color: #999;
         margin-top: 0px;
@@ -146,33 +183,74 @@
         border-radius: 4px;
         text-shadow: 0 1px 0 #fff;
     }
-</style>
-<body onresize="">
+    .center{
+        width:1000px;
+        margin:0px auto;
+    }
+    .auth{
+        position: absolute;
+        top: 0px;
+        left: 0px;
 
-<div class="top"><img src="top.png" style="height: 200px;width: 1000px"/><a href="#" class="login">登陆</a></div>
+    }
+</style>
+<body>
+<div class="auth"><div style="float: left"><img src="" style="height: 100px;width: 100px ;border:1px solid white" alt="图片太帅 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 无法显示"/></div>
+    <div style="float: left">
+        <h1 >Gasine</h1>
+        <p style="margin:0px 10px;padding: 0px;">希望就在远方</p>
+    </div></div>
+<div class="top"><img src="../static/top.png" style="height: 200px;width: 1000px"/>
+    {% if username  %}
+   <a href="/write" class="login">写博客</a><span class="login">{{ username }} </span>
+    {% else %}
+        <a href="/Login" class="login">登陆</a>
+    {% endif %}
+</div>
 <div class="index">
     <ul>
-        <li><a href="#" class="index_url">首页</a></li>
-        <li><a href="#" class="index_url">首页</a></li>
-        <li><a href="#" class="index_url">首页</a></li>
-        <li><a href="#" class="index_url">首页</a></li>
+        <li><a href="/" class="index_url">首页</a></li>
+        <li><a href="/" class="index_url">首页</a></li>
+        <li><a href="/" class="index_url">首页</a></li>
+        <li><a href="/" class="index_url">首页</a></li>
     </ul>
 </div>
-<div>
+<div class="center">
 <div class="content_left" id="left">
     <span style="margin-left:10px;margin-top:5px; font-size: 27px;color: maroon;font-style: italic;">文章分类</span>
     <ul>
         {% for i in categroy %}
-        <li class="sorted"><a href="/article/{{ i.name }}" class="sort_url" id="{{ i.name }}">{{ i.name }}</a></li>
+        <li class="sorted"><a href="/sort/{{ i.id }}" class="sort_url" id="{{ i.name }}">{{ i.name }}</a></li>
         {% endfor %}
+    {% if username %}
+    <li class="sorted"><a href="/addcategory" class="sort_url" onclick="addsort();return false;">添加分类</a></li>
+    {% endif %}
     </ul>
 </div>
         {% block content %}
         {% endblock %}
     </div>
 <div class="page">
-    <a href="#">首页 </a><a href="#">1 </a><a href="#">2 </a><a href="#">3 </a><a href="#">4 </a><a href="#">5 </a><a href="#">末页 </a>
-1/10
+<div class="pagecenter">
+{% if page > 3 %}
+    {% for i in range(count - 3,y) %}
+        {% if id %}
+        <a href="/{{ sort }}/{{ id }}/page/{{ i }}">{{ i }}</a>
+        {% else %}
+        <a href="/{{ sort }}/page/{{ i }}">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    {% for i in range(1,x) %}
+        {% if id %}
+        <a href="/{{ sort }}/{{ id }}/page/{{ i }}">{{ i }}</a>
+        {% else %}
+        <a href="/{{ sort }}/page/{{ i }}">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{{ page }}/{{ count }}
+</div>
 </div>
 <div class="bottom"></div>
 </body>
@@ -192,5 +270,37 @@
      //   }
     //}
     //window.onresize=test();
+    function getxmlhttp(){
+        if (window.XMLHttpRequest)
+         {// code for IE7+, Firefox, Chrome, Opera, Safari
+             var xmlhttp=new XMLHttpRequest();
+         }
+        else
+         {// code for IE6, IE5
+             var xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        return xmlhttp
+    }
+    function addsort(){
+        sort = prompt("输入类名:");
+        xmlhttp = getxmlhttp();
+        url = '/addcategory?sort='+encodeURIComponent(sort);
+        xmlhttp.open('GET',url,true);
+        xmlhttp.onreadystatechange = change;
+        xmlhttp.send(null)
+    }
+    function change(){
+        if (xmlhttp.status == 200){
+            if (xmlhttp.readyState==4){
+                if(xmlhttp.responseText=="True"){
+                    alert("添加成功！");
+                    location.href = '/';
+                }
+                else{
+                    alert("出现某种错误哦！");
+                }
+            }
+        }
+    }
 </script>
 </html>

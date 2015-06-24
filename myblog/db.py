@@ -1,4 +1,4 @@
-#-*_coding:utf-8-*-
+#-*-coding:utf-8-*-
 __author__ = 'gasine'
 from config import *
 
@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 engine = create_engine('mysql://{}:{}@localhost:3306/{}?charset=utf8'.format(db_username,db_password,db_db),pool_recycle=7200,encoding='utf-8',echo = False)
 Session = sessionmaker(bind=engine)
-session = Session()
+dbsession = Session()
 Base = declarative_base()
 
 
@@ -23,28 +23,40 @@ class blog(Base):
     sorted = Column(Integer)
 
     def getSortArticle(self,sortedValue):
-        return session.query(blog).filter(blog.sorted == sortedValue)
-    def addArticle(self,auth,time,content,sortedValue):
-        article = blog(auth = auth ,time = time,content = content,sorted=sortedValue)
+        return dbsession.query(blog).filter(blog.sorted == sortedValue).order_by(desc(blog.id))
+    def addArticle(self,title,auth,time,content,sortedValue):
+        article = blog(title=title, auth=auth, time=time, content=content, sorted=sortedValue)
         if (article):
-            session.add(article)
-            session.commit()
+            dbsession.add(article)
+            dbsession.commit()
             return True
-        else :
+        else:
             return False
     def getallArticle(self):
-        return session.query(blog)
+        return dbsession.query(blog).order_by(desc(blog.id))
     def getArticlebyid(self,id):
-        return session.query(blog).filter(blog.id==id)
-    def getCount(self,sortedValue = ''):
-        if (sorted !=''):
-            return session.query(blog).count()
+        return dbsession.query(blog).filter(blog.id==id).first()
+    def getCount(self,sortedValue =''):
+        if (sortedValue ==''):
+            return dbsession.query(blog).count()
         else :
-            return session.query(blog).filter(blog.sorted==sortedValue).count()
+            return dbsession.query(blog).filter(blog.sorted==sortedValue).count()
     def deleteArticle(self,id):
-        pass
-    def updateArticle(self):
-        pass
+        article = dbsession.query(blog).filter(blog.id==id).first()
+        if (article):
+            dbsession.delete(article)
+            dbsession.commit()
+            return True
+        else:
+            return False
+    def updateArticle(self,id, title, time,content,sorted):
+        up = dbsession.query(blog).filter(blog.id==id)
+        if(up):
+            up.update({'title':title,'time':time,'content':content,'sorted':sorted})
+            dbsession.commit()
+            return True
+        else:
+            return False
 
 class sorted(Base):
     __tablename__ = 'sorted'
@@ -54,18 +66,28 @@ class sorted(Base):
     def addSort(self,name):
         sort = sorted(name = name)
         if (sort):
-            session.add(sort)
-            session.commit()
-            session.close()
+            dbsession.add(sort)
+            dbsession.commit()
+            dbsession.close()
             return True
         else:
             return False
 
     def getSortid(self,name):
-        sortedValue = session.query(sorted.id).filter(sorted.name==name).first()
+        sortedValue = dbsession.query(sorted).filter(sorted.name==name).first()
         if (sortedValue):
-            return sortedValue
+            return sortedValue.id
         else:
             return False
     def getSort(self):
-        return session.query(sorted.name)
+        return dbsession.query(sorted)
+    def getSortname(self,id):
+        return dbsession.query(sorted).filter(sorted.id ==id).first()
+
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer,primary_key=True)
+    username = Column(String(20))
+    password = Column(String(20))
+    def Validation(self,user):
+        return dbsession.query(User.password).filter(User.username==user).first()

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        *{
+            margin:0px;
+            padding: 0px;
+        }
+        .form{
+        }
+        .fie{
+            width:400px;
+            height: 300px;
+            margin: 200px auto;
+        }
+        .login{
+            width:300px;
+            height:300px;
+            margin:45px auto;
+            padding-left: 20px;
+            padding-top: 20px;
+        }
+        .input{
+            width:200px;
+            height:20px;
+        }
+        .center{
+            width:204px;
+            margin:5px auto;
+        }
+        .button{
+            float: right;
+            -webkit-appearance: none;
+            margin: 0;
+            border: none;
+            overflow: visible;
+            font: inherit;
+            color: #666;
+            text-transform: none;
+            display: inline-block;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 0 12px;
+            background: #f7f7f7;
+            vertical-align: middle;
+            line-height: 28px;
+            min-height: 30px;
+            font-size: 1rem;
+            text-decoration: none;
+            text-align: center;
+            border: 1px solid rgba(0,0,0,.2);
+            border-bottom-color: rgba(0,0,0,.3);
+            background-origin: border-box;
+            background-image: -webkit-linear-gradient(top,#fff,#eee);
+            background-image: linear-gradient(to bottom,#fff,#eee);
+            border-radius: 4px;
+            text-shadow: 0 1px 0 #fff;
+        }
+        .bu{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <form class="form">
+        <fieldset class="fie">
+            <div class="login">
+            <div>
+                <label>帐号:</label>
+            </div>
+            <div class="center ">
+                <input type="text" class="input" name="user" placeholder="username">
+            </div>
+            <div>
+                <label>密码：</label>
+            </div>
+            <div class="center ">
+                <input type="password" name="password" class="input" placeholder="password">
+            </div>
+            <div class="center bu">
+                <button class="button" onclick="login();return false;">登录</button>
+            </div>
+                </div>
+        </fieldset>
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+    function login(){
+        if (window.XMLHttpRequest)
+         {// code for IE7+, Firefox, Chrome, Opera, Safari
+         xmlhttp=new XMLHttpRequest();
+         }
+        else
+         {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var form=document.getElementsByClassName('form')[0];
+        var user = form.user.value;
+        var password = form.password.value;
+        data = 'user='+encodeURIComponent(user)+'&password='+encodeURIComponent(password);
+        xmlhttp.open('POST','/login',true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xmlhttp.onreadystatechange=change;
+        xmlhttp.send(data);
+    }
+    function change(){
+        if (xmlhttp.readyState==4){
+            if(xmlhttp.status==200){
+                if(xmlhttp.responseText=='True'){
+                    alert('登录成功！');
+                    location.href='/';
+                }
+                else{
+                    alert('帐号密码错误！');
+                }
+            }
+        }
+    }
+</script>
+</html>

@@ -5,7 +5,9 @@
     <div class="text">
         <h1 class="title">{{ art.title }}</h1>
         <p class="writer">{{ art.auth }}</p>
-        <div class="main"><span >{{ art.content[0:70] }}
+        <div class="main"><span >{% autoescape false %}
+            {{ art.content[0:70] }}
+        {% endautoescape %}
         </span></div>
     <a href="/article/{{ art.id }}" id="read">阅读全文</a>
     </div>

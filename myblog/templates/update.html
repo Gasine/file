@@ -172,7 +172,7 @@
     <span style="margin-left:10px;margin-top:5px; font-size: 27px;color: maroon;font-style: italic;">文章分类</span>
     <ul>
         {% for i in categroy %}
-        <li class="sorted"><a href="/article/{{ i.name }}" class="sort_url" id="{{ i.name }}">{{ i.name }}</a></li>
+        <li class="sorted"><a href="/sort/{{ i.id }}" class="sort_url" id="{{ i.name }}">{{ i.name }}</a></li>
         {% endfor %}
     {% if username %}
     <li class="sorted"><a href="/addcategory" class="sort_url">添加分类</a></li>
@@ -184,7 +184,7 @@
         <fieldset>
             <div class="spa"><label>标题</label></div>
             <div class="spa">
-            <input type="text" placeholder="title" id="title">
+            <input type="text" placeholder="title" id="title" value="{{ article.title }}">
                 </div>
             <div class="spa">
                 <label id="sorted">分类</label>
@@ -195,7 +195,7 @@
                 </select></div>
             <div class="spa"><label>内容</label></div>
                     <div class="spa">
-            <textarea cols="50" rows="30" placeholder="content" id="content"></textarea></div>
+            <textarea cols="50" rows="30" placeholder="content" id="content">{{ article.content }}</textarea></div>
             <button id="read" onclick="postarticle()">提交</button>
         </fieldset>
 
@@ -203,6 +203,7 @@
 
 </div>
     </div>
+
 <div class="bottom"></div>
 </body>
 <script type="text/javascript">
@@ -216,35 +217,6 @@
              var xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
         }
         return xmlhttp
-    }
-    function postarticle(){
-
-        xmlhttps = getxmlhttp();
-
-        var title = document.getElementById('title').value;
-        var sort = document.getElementById('category');
-        var index= sort.selectedIndex;
-        var sorted = sort.options[index].text;
-        var content = document.getElementById('content').value;
-        var date = new Date().toLocaleString();
-        xmlhttps.open("POST","/addarticle",true);
-        xmlhttps.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        data = 'title='+encodeURIComponent(title)+'&sorted='+encodeURIComponent(sorted)+'&content='+encodeURIComponent(content)+'&date='+encodeURIComponent(date);
-        xmlhttps.onreadystatechange = response;
-        xmlhttps.send(data);
-    }
-    function response(){
-        if (xmlhttps.status ==200){
-            if(xmlhttps.readyState==4){
-                if(xmlhttps.responseText=='True') {
-                    alert('发布成功');
-                    location.href = '/'
-                }
-                if(xmlhttps.responseText=='False'){
-                    alert('填写完全哦！');
-                }
-            }
-        }
     }
     function Scategory(){
         xmlhttp = getxmlhttp();
@@ -264,8 +236,12 @@
                 for (var i=0;i<getjsonlength(category);i++){
                     var option = document.createElement('option');
                     option.innerHTML = category[i];
+                    if(category[i]=="{{ sorted }}"){
+                        option.selected=true;
+                    }
                     select.appendChild(option);
                 }
+
             }
         }
     }
@@ -275,6 +251,34 @@
             length++;
         }
         return length
+    }
+    function postarticle(){
+
+        xmlhttp = getxmlhttp()
+        var title = document.getElementById('title').value;
+        var sort = document.getElementById('category');
+        var index= sort.selectedIndex;
+        var sorted = sort.options[index].text;
+        var content = document.getElementById('content').value;
+        var date = new Date().toLocaleString();
+        xmlhttp.open("POST","/updatearticle/{{ article.id }}",true);
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        data = 'title='+encodeURIComponent(title)+'&sorted='+encodeURIComponent(sorted)+'&content='+encodeURIComponent(content)+'&date='+encodeURIComponent(date);
+        xmlhttp.onreadystatechange = response;
+        xmlhttp.send(data);
+    }
+    function response(){
+        if (xmlhttp.status ==200){
+            if(xmlhttp.readyState==4){
+                if(xmlhttp.responseText=='True') {
+                    alert('发布成功');
+                    location.href = '/'
+                }
+                if(xmlhttp.responseText=='False'){
+                    alert('填写完全哦！');
+                }
+            }
+        }
     }
     window.onload = Scategory();
 </script>
