@@ -151,6 +151,16 @@
         margin:0px auto;
     }
 </style>
+<script src="../static/js/kindeditor-min.js"></script>
+    <script>
+			var editor;
+			KindEditor.ready(function(K) {
+				editor = K.create('#content', {
+					allowFileManager : true
+				});
+
+			});
+		</script>
 <body>
 <div class="top"><img src="../static/top.png" style="height: 200px;width: 1000px"/>
     {% if username  %}
@@ -195,7 +205,8 @@
                 </select></div>
             <div class="spa"><label>内容</label></div>
                     <div class="spa">
-            <textarea cols="50" rows="30" placeholder="content" id="content">{{ article.content }}</textarea></div>
+            <textarea id="content" name="content" style="width:800px;height:400px;visibility:hidden;">{% autoescape false %}{{ article.content}}{% endautoescape %}</textarea>
+                </div>
             <button id="read" onclick="postarticle()">提交</button>
         </fieldset>
 
@@ -259,6 +270,7 @@
         var sort = document.getElementById('category');
         var index= sort.selectedIndex;
         var sorted = sort.options[index].text;
+        editor.sync();
         var content = document.getElementById('content').value;
         var date = new Date().toLocaleString();
         xmlhttp.open("POST","/updatearticle/{{ article.id }}",true);

@@ -3,14 +3,16 @@
 <div class="content_right">
     {% for art in article %}
     <div class="text">
-        <h1 class="title">{{ art.title }}</h1>
+        <h1 class="title"><a href="/article/{{ art.id }}">{{ art.title }}</a></h1>
         <p class="writer">{{ art.auth }}</p>
-        <div class="main"><span >{% autoescape false %}
-            {{ art.content[0:70] }}
+        <div class="main">{% autoescape false %}
+            {{ art.content}}
+
         {% endautoescape %}
-        </span></div>
+        </div>
     <a href="/article/{{ art.id }}" id="read">阅读全文</a>
     </div>
     {% endfor %}
 </div>
+
 {% endblock %}

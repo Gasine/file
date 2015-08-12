@@ -91,3 +91,43 @@ class User(Base):
     password = Column(String(20))
     def Validation(self,user):
         return dbsession.query(User.password).filter(User.username==user).first()
+
+class picture(Base):
+    __tablename__ = 'picture'
+    id = Column(Integer,primary_key=True)
+    name = Column(String(25))
+    width = Column(Integer)
+    height = Column(Integer)
+    x = Column(Integer)
+    y = Column(Integer)
+    text = Column(Text)
+    state = Column(Integer)
+    onplay = Column(Integer)
+
+    def getallpic(self):
+        return dbsession.query(picture).order_by(desc(picture.id))
+    def getonplay(self):
+        return dbsession.query(picture).filter(picture.onplay==1).order_by(desc(picture.id))
+    def updatestate(self,name,state):
+        up = dbsession.query(picture).filter(picture.name==name)
+        if(up):
+            up.update({'state':state})
+            return True
+        else:
+            return False
+    def position(self,name,x,y):
+        up = dbsession.query(picture).filter(picture.name==name)
+        if(up):
+            up.update({'x':x,'y':y})
+            return True
+        else:
+            return False
+    def addpic(self,name,width,height,x,y,state=1,onplay=0,text=''):
+        pic = picture(name=name,width=width,height=height,x=x,y=y,text=text,state=state,onplay=onplay)
+        if(pic):
+            dbsession.add(pic)
+            dbsession.commit()
+            dbsession.close()
+            return True
+        else:
+            return False

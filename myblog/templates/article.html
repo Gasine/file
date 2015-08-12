@@ -205,14 +205,10 @@
         <p class="writer A_title">{{ article.auth }}</p>
         <div class="main" ><span >{% autoescape false %}
             {{ article.content }}
-        {% endautoescape %}<br/>hah
+        {% endautoescape %}
         </span></div>
     </div>
     </div>
-<div class="page">
-    <a href="#">首页 </a><a href="#">1 </a><a href="#">2 </a><a href="#">3 </a><a href="#">4 </a><a href="#">5 </a><a href="#">末页 </a>
-1/10
-</div>
 <div class="bottom"></div>
 </body>
 <script type="text/javascript">
@@ -229,7 +225,6 @@
     }
     function deleteArticle(obj){
         var url = obj.getAttribute('href');
-        alert(url);
         xmlhttp = getxmlhttp();
         xmlhttp.open('GET',url,true);
         xmlhttp.onreadystatechange =changes;
